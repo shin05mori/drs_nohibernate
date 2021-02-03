@@ -11,6 +11,15 @@ public class Employee {
     private Timestamp created_at;
     private Timestamp updated_at;
     private Integer delete_flag;
+    private int count;
+
+    public Employee() {
+    }
+
+    public Employee(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -61,5 +70,12 @@ public class Employee {
         this.delete_flag = delete_flag;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
 }
