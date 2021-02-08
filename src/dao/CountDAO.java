@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.Employee;
+import models.Report;
 import utils.DBUtil;
 
 public class CountDAO {
@@ -29,6 +30,46 @@ public class CountDAO {
                 Employee employee = new Employee();
                 employee.setCount(rs.getInt("count(*)"));
                 results.add(employee);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
+    public List<Report> getReportsCount() {
+        List<Report> results = new ArrayList<Report>();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select count(*) from reports";
+            pstmt = con.prepareStatement(sql);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Report report = new Report();
+                report.setCount(rs.getInt("count(*)"));
+                results.add(report);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

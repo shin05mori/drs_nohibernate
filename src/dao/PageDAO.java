@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.Employee;
+import models.Report;
 import utils.DBUtil;
 
 public class PageDAO {
@@ -62,6 +63,55 @@ public class PageDAO {
         }
         return results;
     }
+
+    public List<Report> selectReportPage(int a, int b) {
+        List<Report> results = new ArrayList<Report>();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select * from reports order by id desc limit ?, ?";
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, a);
+            pstmt.setInt(2, b);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Report report = new Report();
+                report.setId(rs.getInt("id"));
+                report.setEmployee_id(rs.getInt("employee_id"));
+                report.setReport_date(rs.getDate("report_date"));
+                report.setTitle(rs.getString("title"));
+                report.setContent(rs.getString("content"));
+                report.setCreated_at(rs.getTimestamp("created_at"));
+                report.setUpdated_at(rs.getTimestamp("updated_at"));
+                results.add(report);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
 
 
 }

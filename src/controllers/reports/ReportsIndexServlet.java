@@ -1,4 +1,4 @@
-package controllers.employees;
+package controllers.reports;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,19 +12,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.CountDAO;
 import dao.PageDAO;
-import models.Employee;
+import models.Report;
 
 /**
- * Servlet implementation class EmployeesIndexServlet
+ * Servlet implementation class ReportsIndexServlet
  */
-@WebServlet("/employees/index")
-public class EmployeesIndexServlet extends HttpServlet {
+@WebServlet("/reports/index")
+public class ReportsIndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EmployeesIndexServlet() {
+    public ReportsIndexServlet() {
         super();
     }
 
@@ -38,26 +38,26 @@ public class EmployeesIndexServlet extends HttpServlet {
             page = Integer.parseInt(request.getParameter("page"));
         } catch(NumberFormatException e) { }
         CountDAO dao1 = new CountDAO();
-        List<Employee> list = dao1.getEnployeesCount();
-        long employees_count = (long)list.get(0).getCount();
+        List<Report> list = dao1.getReportsCount();
+        long reports_count = (long)list.get(0).getCount();
 
         PageDAO dao2 = new PageDAO();
         int a = (15 * (page - 1));
         int b = 15;
 
-        List<Employee> employees = dao2.selectPage(a, b);
+        List<Report> reports = dao2.selectReportPage(a, b);
 
 
-        request.setAttribute("employees", employees);
-        request.setAttribute("employees_count", employees_count);
+        request.setAttribute("reports", reports);
+        request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
         rd.forward(request, response);
-        }
+    }
 
 }

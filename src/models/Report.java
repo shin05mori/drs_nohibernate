@@ -5,7 +5,8 @@ import java.sql.Timestamp;
 
 public class Report {
     private Integer id;
-    private Employee employee;
+    //private Employee employee; //employee_id
+    private int employee_id;
     private Date report_date;
     private String title;
     private String content;
@@ -24,12 +25,20 @@ public class Report {
         this.id = id;
     }
 
-    public Employee getEmployee() {
+    /*public Employee getEmployee() {
         return employee;
     }
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }*/
+
+    public int getEmployee_id() {
+        return employee_id;
+    }
+
+    public void setEmployee_id(int employee_id) {
+        this.employee_id = employee_id;
     }
 
     public Date getReport_date() {
