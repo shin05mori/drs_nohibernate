@@ -18,7 +18,7 @@ public class LoginDAO {
         try {
             Connection con = DBUtil.getConnection();
 
-            String sql = "select * from employees where delete_fag = 0 and code = ? and password = ?";
+            String sql = "select * from employees where delete_flag = 0 and code = ? and password = ?";
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, code);
             pstmt.setString(2, password);

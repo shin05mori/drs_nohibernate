@@ -54,25 +54,18 @@ public class LoginServlet extends HttpServlet {
         Employee e = null;
 
         if(code != null && !code.equals("") && plain_pass != null && !plain_pass.equals("")) {
-            //EntityManager em = DBUtil.createEntityManager();
 
             String password = EncryptUtil.getPasswordEncrypt(
                     plain_pass,
                     (String)this.getServletContext().getAttribute("pepper")
                     );
 
-            // 社員番号とパスワードが正しいかチェックする
-            //try {
                 LoginDAO dao = new LoginDAO();
                 e = dao.checkLoginCodeAndPassword(code, password);
+                if(e.getId() == null){
+                    e = null;
+                }
 
-                /*e = em.createNamedQuery("checkLoginCodeAndPassword", Employee.class)
-                      .setParameter("code", code)
-                      .setParameter("pass", password)
-                      .getSingleResult();*/
-            //} catch(NoResultException ex) {}
-
-            //em.close();
 
             if(e != null) {
                 check_result = true;
@@ -80,7 +73,6 @@ public class LoginServlet extends HttpServlet {
         }
 
         if(!check_result) {
-            // 認証できなかったらログイン画面に戻る
             request.setAttribute("_token", request.getSession().getId());
             request.setAttribute("hasError", true);
             request.setAttribute("code", code);
@@ -88,7 +80,6 @@ public class LoginServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login/login.jsp");
             rd.forward(request, response);
         } else {
-            // 認証できたらログイン状態にしてトップページへリダイレクト
             request.getSession().setAttribute("login_employee", e);
 
             request.getSession().setAttribute("flush", "ログインしました。");
