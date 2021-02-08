@@ -11,31 +11,23 @@ import models.Employee;
 import utils.DBUtil;
 
 public class CountDAO {
-    // データベース接続と結果取得のための変数
     private PreparedStatement pstmt;
-    private ResultSet rs;  //checkRegisterdCode
+    private ResultSet rs;
 
     public List<Employee> getEnployeesCount() {
-        // メソッドの結果として返すリスト
         List<Employee> results = new ArrayList<Employee>();
 
         try {
-            // 1,2. ドライバを読み込み、DBに接続
             Connection con = DBUtil.getConnection();
 
-            // 3.DBとやりとりする窓口(Statementオブジェクト)の作成
             String sql = "select count(*) from employees";
             pstmt = con.prepareStatement(sql);
 
-            // 4,5. Select文の実行と結果を格納／代入
             rs = pstmt.executeQuery();
 
-            // 6. 結果を表示する
             while (rs.next()) {
-                // 1件ずつCountryオブジェクトを生成して結果を詰める
                 Employee employee = new Employee();
                 employee.setCount(rs.getInt("count(*)"));
-                // リストに追加
                 results.add(employee);
             }
         } catch (ClassNotFoundException e) {

@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.EmployeeDAO;
+import dao.CountDAO;
+import dao.PageDAO;
 import models.Employee;
 
 /**
@@ -31,26 +32,21 @@ public class EmployeesIndexServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        EmployeeDAO dao = new EmployeeDAO();
 
-        /*int page = 1;
+        int page = 1;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(NumberFormatException e) { }
-        EmployeeDAO dao1 = new EmployeeDAO();
-        CountDAO dao2 = new CountDAO();
-
-        List<Employee> list = dao2.getEnployeesCount();
-
-
-        List<Employee> employees = dao1.createNamedQuery("getAllEmployees", Employee.class)
-                                     .setFirstResult(15 * (page - 1))
-                                     .setMaxResults(15)
-                                     .getResultList();
-
+        CountDAO dao1 = new CountDAO();
+        List<Employee> list = dao1.getEnployeesCount();
         long employees_count = (long)list.get(0).getCount();
 
-        //con.close();
+        PageDAO dao2 = new PageDAO();
+        int a = (15 * (page - 1));
+        int b = 15;
+
+        List<Employee> employees = dao2.selectPage(a, b);
+
 
         request.setAttribute("employees", employees);
         request.setAttribute("employees_count", employees_count);
@@ -58,11 +54,7 @@ public class EmployeesIndexServlet extends HttpServlet {
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
-        }*/
-
-        List<Employee> employees = dao.getEmployeeFromName();
-
-        request.setAttribute("employees", employees);
+        }
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
         rd.forward(request, response);	}

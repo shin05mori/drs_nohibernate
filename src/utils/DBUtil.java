@@ -22,7 +22,7 @@ public class DBUtil {
     }
 
     public static void close() {
-        // 7. 接続を閉じる
+        // 3. 接続を閉じる
         if (con != null) {
             try {
                 con.close();

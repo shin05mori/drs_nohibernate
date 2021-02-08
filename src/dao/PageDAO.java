@@ -10,30 +10,24 @@ import java.util.List;
 import models.Employee;
 import utils.DBUtil;
 
-public class EmployeeDAO {
-    // データベース接続と結果取得のための変数
+public class PageDAO {
     private PreparedStatement pstmt;
     private ResultSet rs;
 
-    public List<Employee> getAllEmployees() {
-        // メソッドの結果として返すリスト
+    public List<Employee> selectPage(int a, int b) {
         List<Employee> results = new ArrayList<Employee>();
 
         try {
-            // 1,2. ドライバを読み込み、DBに接続
             Connection con = DBUtil.getConnection();
 
-            // 3.DBとやりとりする窓口(Statementオブジェクト)の作成
-            String sql = "select * from employees order by id desc";
+            String sql = "select * from employees order by id desc limit ?, ?";
             pstmt = con.prepareStatement(sql);
 
-            // 4,5. Select文の実行と結果を格納／代入
-
+            pstmt.setInt(1, a);
+            pstmt.setInt(2, b);
             rs = pstmt.executeQuery();
 
-            // 6. 結果を表示する
             while (rs.next()) {
-                // 1件ずつオブジェクトを生成して結果を詰める
                 Employee employee = new Employee();
                 employee.setId(rs.getInt("id"));
                 employee.setCode(rs.getString("code"));
@@ -43,8 +37,6 @@ public class EmployeeDAO {
                 employee.setCreated_at(rs.getTimestamp("created_at"));
                 employee.setUpdated_at(rs.getTimestamp("updated_at"));
                 employee.setDelete_flag(rs.getInt("delete_flag"));
-
-                // リストに追加
                 results.add(employee);
             }
         } catch (ClassNotFoundException e) {
@@ -70,5 +62,6 @@ public class EmployeeDAO {
         }
         return results;
     }
+
 
 }

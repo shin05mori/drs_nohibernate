@@ -4,33 +4,35 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import models.Employee;
 import utils.DBUtil;
 
-public class RegisterDAO {
+public class SelectDAO {
     private PreparedStatement pstmt;
     private ResultSet rs;
 
-    public List<Employee> checkRegisteredCode(String code) {
-        List<Employee> results = new ArrayList<Employee>();
+    public Employee selectCode(Integer id) {
+        Employee results = new Employee();
 
         try {
             Connection con = DBUtil.getConnection();
 
-            String sql = "select count(*) from employees where code = ?";
+            String sql = "select * from employees where id = ?";
             pstmt = con.prepareStatement(sql);
 
-            pstmt.setString(1, code);
+            pstmt.setInt(1, id);
             rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                Employee employee = new Employee();
-                employee.setCount(rs.getInt("count(*)"));
-
-                results.add(employee);
+            if(rs.next()){
+            results.setId(rs.getInt("id"));
+            results.setCode(rs.getString("code"));
+            results.setName(rs.getString("name"));
+            results.setPassword(rs.getString("password"));
+            results.setAdmin_flag(rs.getInt("admin_flag"));
+            results.setCreated_at(rs.getTimestamp("created_at"));
+            results.setUpdated_at(rs.getTimestamp("updated_at"));
+            results.setDelete_flag(rs.getInt("delete_flag"));
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
