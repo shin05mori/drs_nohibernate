@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 public class Report {
     private Integer id;
-    //private Employee employee; //employee_id
+    private Employee employee; //employee_id
     private int employee_id;
     private Date report_date;
     private String title;
@@ -25,13 +25,13 @@ public class Report {
         this.id = id;
     }
 
-    /*public Employee getEmployee() {
+    public Employee getEmployee() {
         return employee;
     }
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-    }*/
+    }
 
     public int getEmployee_id() {
         return employee_id;

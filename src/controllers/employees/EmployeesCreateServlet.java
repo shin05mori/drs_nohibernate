@@ -57,7 +57,6 @@ public class EmployeesCreateServlet extends HttpServlet {
 
             List<String> errors = EmployeeValidator.validate(emp, true, true);
             if(errors.size() > 0) {
-                //con.close();
 
                 request.setAttribute("_token", request.getSession().getId());
                 request.setAttribute("employee", emp);

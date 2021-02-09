@@ -1,12 +1,14 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import models.Employee;
+import models.Report;
 import utils.DBUtil;
 
 public class TransactionDAO {
@@ -108,6 +110,47 @@ public class TransactionDAO {
             pstmt.setTimestamp(1, updated_at);
             pstmt.setInt(2, delete_flag);
             pstmt.setInt(3, id);
+
+            pstmt.executeUpdate();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
+    public Report setReportInsert(int employee_id, Date report_date, String title, String content, Timestamp created_at, Timestamp updated_at) {
+        Report results = new Report();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "insert into reports (employee_id, report_date, title, content, created_at, updated_at) values (?, ?, ?, ?, ?, ?)";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, employee_id);
+            pstmt.setDate(2, report_date);
+            pstmt.setString(3, title);
+            pstmt.setString(4, content);
+            pstmt.setTimestamp(5, created_at);
+            pstmt.setTimestamp(6, updated_at);
 
             pstmt.executeUpdate();
 

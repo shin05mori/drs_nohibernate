@@ -11,7 +11,7 @@ import models.Employee;
 import models.Report;
 import utils.DBUtil;
 
-public class PageDAO {
+public class PageDAO extends SelectDAO {
     private PreparedStatement pstmt;
     private ResultSet rs;
 
@@ -77,8 +77,13 @@ public class PageDAO {
             pstmt.setInt(2, b);
             rs = pstmt.executeQuery();
 
+
+
             while (rs.next()) {
                 Report report = new Report();
+                SelectDAO dao = new SelectDAO();
+                Employee employee = dao.selectCode(rs.getInt("employee_id"));
+
                 report.setId(rs.getInt("id"));
                 report.setEmployee_id(rs.getInt("employee_id"));
                 report.setReport_date(rs.getDate("report_date"));
@@ -86,6 +91,7 @@ public class PageDAO {
                 report.setContent(rs.getString("content"));
                 report.setCreated_at(rs.getTimestamp("created_at"));
                 report.setUpdated_at(rs.getTimestamp("updated_at"));
+                report.setEmployee(employee);
                 results.add(report);
             }
         } catch (ClassNotFoundException e) {
