@@ -118,6 +118,62 @@ public class PageDAO extends SelectDAO {
         return results;
     }
 
+    public List<Report> selectMyAllReportPage(int employee_id, int a, int b) {
+        List<Report> results = new ArrayList<Report>();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select * from reports where employee_id = ? order by id desc limit ?, ?";
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, employee_id);
+            pstmt.setInt(2, a);
+            pstmt.setInt(3, b);
+            rs = pstmt.executeQuery();
+
+
+
+            while (rs.next()) {
+                Report report = new Report();
+                SelectDAO dao = new SelectDAO();
+                Employee employee = dao.selectCode(rs.getInt("employee_id"));
+
+                report.setId(rs.getInt("id"));
+                report.setEmployee_id(rs.getInt("employee_id"));
+                report.setReport_date(rs.getDate("report_date"));
+                report.setTitle(rs.getString("title"));
+                report.setContent(rs.getString("content"));
+                report.setCreated_at(rs.getTimestamp("created_at"));
+                report.setUpdated_at(rs.getTimestamp("updated_at"));
+                report.setEmployee(employee);
+                results.add(report);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
+
 
 
 }

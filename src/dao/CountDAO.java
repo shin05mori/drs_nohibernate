@@ -95,4 +95,46 @@ public class CountDAO {
         return results;
     }
 
+    public List<Report> getMyReportsCount(int employee_id) {
+        List<Report> results = new ArrayList<Report>();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select count(*) from reports where employee_id = ?";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, employee_id);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Report report = new Report();
+                report.setCount(rs.getInt("count(*)"));
+                results.add(report);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
+
 }
