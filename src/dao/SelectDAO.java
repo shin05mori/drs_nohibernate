@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import models.Employee;
+import models.Report;
 import utils.DBUtil;
 
 public class SelectDAO {
@@ -57,6 +58,55 @@ public class SelectDAO {
         }
         return results;
     }
+
+    public Report selectReportCode(Integer id) {
+        Report result = new Report();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select * from reports where id = ?";
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+
+            if(rs.next()){
+            Employee employee = new Employee();
+            result.setId(rs.getInt("id"));
+            result.setEmployee_id(rs.getInt("employee_id"));
+            result.setReport_date(rs.getDate("report_date"));
+            result.setTitle(rs.getString("title"));
+            result.setContent(rs.getString("content"));
+            result.setCreated_at(rs.getTimestamp("created_at"));
+            result.setUpdated_at(rs.getTimestamp("updated_at"));
+            employee = selectCode(rs.getInt("employee_id"));
+            result.setEmployee(employee);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return result;
+    }
+
 
 
 }
