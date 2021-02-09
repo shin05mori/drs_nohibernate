@@ -178,4 +178,45 @@ public class TransactionDAO {
         return results;
     }
 
+    public Report setReportUpdate(int id, Date report_date, String title, String content, Timestamp updated_at) {
+        Report results = new Report();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "update reports set report_date = ?, title = ?, content = ?, updated_at = ? where id = ?";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setDate(1, report_date);
+            pstmt.setString(2, title);
+            pstmt.setString(3, content);
+            pstmt.setTimestamp(4, updated_at);
+            pstmt.setInt(5, id);
+
+            pstmt.executeUpdate();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
+
 }
