@@ -42,10 +42,10 @@ public class EmployeesIndexServlet extends HttpServlet {
         long employees_count = (long)list.get(0).getCount();
 
         PageDAO dao2 = new PageDAO();
-        int a = (15 * (page - 1));
-        int b = 15;
+        int first = (15 * (page - 1));
+        int last = 15;
 
-        List<Employee> employees = dao2.selectPage(a, b);
+        List<Employee> employees = dao2.selectPage(first, last);
 
 
         request.setAttribute("employees", employees);

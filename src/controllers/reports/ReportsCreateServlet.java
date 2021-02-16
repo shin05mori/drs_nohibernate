@@ -41,6 +41,7 @@ public class ReportsCreateServlet extends HttpServlet {
             Report r = new Report();
 
             r.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
+            r.setEmployee_id(r.getEmployee().getId());
 
             Date report_date = new Date(System.currentTimeMillis());
             String rd_str = request.getParameter("report_date");
@@ -67,7 +68,8 @@ public class ReportsCreateServlet extends HttpServlet {
                 rd.forward(request, response);
             } else {
                 TransactionDAO dao = new TransactionDAO();
-                dao.setReportInsert(r.getEmployee().getId(), r.getReport_date(), r.getTitle(), r.getContent(), r.getCreated_at(), r.getUpdated_at());
+                dao.setReportInsert(r);
+                //dao.setReportInsert(r.getEmployee().getId(), r.getReport_date(), r.getTitle(), r.getContent(), r.getCreated_at(), r.getUpdated_at());
 
 
                 request.getSession().setAttribute("flush", "登録が完了しました。");

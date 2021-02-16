@@ -8,7 +8,8 @@ import models.Employee;
 
 public class EmployeeValidator {
     public static List<String> validate(Employee e, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
-        java.util.List<String> errors = new ArrayList<String>();
+        //java.util.List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<String>();
 
         String code_error = validateCode(e.getCode(), codeDuplicateCheckFlag);
         if(!code_error.equals("")) {
@@ -23,6 +24,17 @@ public class EmployeeValidator {
         String password_error =validatePassword(e.getPassword(), passwordCheckFlag);
         if(!password_error.equals("")) {
             errors.add(password_error);
+        }
+
+        return errors;
+    }
+
+    public static List<String> validateF(Employee e) {
+        java.util.List<String> errors = new ArrayList<String>();
+
+        String follow_error = validateFollow(e.getId(), e.getFollow_id());
+        if(!follow_error.equals("")) {
+            errors.add(follow_error);
         }
 
         return errors;
@@ -59,6 +71,19 @@ public class EmployeeValidator {
         if(passwordCheckFlag && (password == null || password.equals(""))) {
             return "パスワードを入力してください。";
         }
+        return "";
+    }
+
+    private static String validateFollow(int id, int follow_id) {
+
+            RegisterDAO dao = new RegisterDAO();
+            List<Employee> list = dao.checkRegisteredFollow(id, follow_id);
+
+            long employees_count = (long)list.get(0).getCount();
+            if(employees_count > 0) {
+                return "フォローしています。";
+            }
+
         return "";
     }
 }

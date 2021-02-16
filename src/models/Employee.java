@@ -12,6 +12,7 @@ public class Employee {
     private Timestamp updated_at;
     private Integer delete_flag;
     private int count;
+    private int follow_id;
 
     public Employee() {
     }
@@ -78,6 +79,14 @@ public class Employee {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getFollow_id() {
+        return follow_id;
+    }
+
+    public void setFollow_id(int follow_id) {
+        this.follow_id = follow_id;
     }
 
 }

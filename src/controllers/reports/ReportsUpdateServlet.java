@@ -38,8 +38,8 @@ public class ReportsUpdateServlet extends HttpServlet {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
 
-            SelectDAO dao = new SelectDAO();
-            Report r = dao.selectReportCode((Integer)(request.getSession().getAttribute("report_id")));
+            SelectDAO selectDao = new SelectDAO();
+            Report r = selectDao.selectReportCode((Integer)(request.getSession().getAttribute("report_id")));
 
             r.setReport_date(Date.valueOf(request.getParameter("report_date")));
             r.setTitle(request.getParameter("title"));
@@ -56,8 +56,10 @@ public class ReportsUpdateServlet extends HttpServlet {
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/edit.jsp");
                 rd.forward(request, response);
             } else {
-                TransactionDAO dao1 = new TransactionDAO();
-                dao1.setReportUpdate(r.getId(), r.getReport_date(), r.getTitle(), r.getContent(), r.getUpdated_at());
+                TransactionDAO TranDao = new TransactionDAO();
+                TranDao.setReportUpdate(r);
+
+                //dao1.setReportUpdate(r.getId(), r.getReport_date(), r.getTitle(), r.getContent(), r.getUpdated_at());
 
 
                 request.getSession().setAttribute("flush", "更新が完了しました。");

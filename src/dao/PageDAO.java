@@ -173,6 +173,109 @@ public class PageDAO extends SelectDAO {
         return results;
     }
 
+    public List<Employee> selectFollowPage(int employee_id, int a, int b) {
+        List<Employee> results = new ArrayList<Employee>();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select * from follow where employee_id = ? order by id desc limit ?, ?";
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, employee_id);
+            pstmt.setInt(2, a);
+            pstmt.setInt(3, b);
+            rs = pstmt.executeQuery();
+
+
+
+            while (rs.next()) {
+                Employee e = new Employee();
+                Employee e2 = new Employee();
+                SelectDAO dao = new SelectDAO();
+                e2 = dao.selectCode(rs.getInt("follow_id"));
+
+                e.setId(e2.getId());
+                e.setCode(e2.getCode());
+                e.setName(e2.getName());
+                e.setFollow_id(rs.getInt("follow_id"));
+
+                results.add(e);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
+    public List<Employee> selectFollowPageJoinSQL(int employee_id, int a, int b) {
+        // join SQL文
+        List<Employee> results = new ArrayList<Employee>();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select * from follow inner join employees on follow_id = employees.id where employee_id = ? order by follow.id desc limit ?, ?;";
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, employee_id);
+            pstmt.setInt(2, a);
+            pstmt.setInt(3, b);
+            rs = pstmt.executeQuery();
+
+
+
+            while (rs.next()) {
+                Employee e = new Employee();
+                e.setId(rs.getInt("employees.id"));
+                e.setCode(rs.getString("code"));
+                e.setName(rs.getString("name"));
+                e.setFollow_id(rs.getInt("follow_id"));
+
+                results.add(e);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
 
 
 

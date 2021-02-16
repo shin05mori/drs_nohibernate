@@ -38,14 +38,13 @@ public class ReportsIndexServlet extends HttpServlet {
             page = Integer.parseInt(request.getParameter("page"));
         } catch(NumberFormatException e) { }
         CountDAO dao1 = new CountDAO();
-        List<Report> list = dao1.getReportsCount();
-        long reports_count = (long)list.get(0).getCount();
+        int reports_count = dao1.getReportsCount();
 
         PageDAO dao2 = new PageDAO();
-        int a = (15 * (page - 1));
-        int b = 15;
+        int first = (15 * (page - 1));
+        int last = 15;
 
-        List<Report> reports = dao2.selectReportPage(a, b);
+        List<Report> reports = dao2.selectReportPage(first, last);
 
 
         request.setAttribute("reports", reports);

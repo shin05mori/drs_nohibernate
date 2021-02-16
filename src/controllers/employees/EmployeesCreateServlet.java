@@ -67,7 +67,8 @@ public class EmployeesCreateServlet extends HttpServlet {
             } else {
                 //インスタンス化して実行する場合
                 TransactionDAO dao = new TransactionDAO();
-                dao.setInsert(emp.getCode(), emp.getName(), emp.getPassword(), emp.getAdmin_flag(), emp.getCreated_at(), emp.getUpdated_at(), emp.getDelete_flag());
+                int count = dao.setInsert(emp);
+                //dao.setInsert(emp.getCode(), emp.getName(), emp.getPassword(), emp.getAdmin_flag(), emp.getCreated_at(), emp.getUpdated_at(), emp.getDelete_flag());
 
                 //このクラスに直接記入する場合
                 /*  PreparedStatement pstmt = null;
@@ -109,7 +110,7 @@ public class EmployeesCreateServlet extends HttpServlet {
                     DBUtil.close();
                 }*/
 
-                request.getSession().setAttribute("flush", "登録が完了しました。");
+                request.getSession().setAttribute("flush", count + "件登録が完了しました。");
 
 
                 response.sendRedirect(request.getContextPath() + "/employees/index");

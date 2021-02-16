@@ -77,7 +77,9 @@ public class EmployeesUpdateServlet extends HttpServlet {
                 rd.forward(request, response);
             } else {
                 TransactionDAO dao = new TransactionDAO();
-                dao.setUpdate(e.getId(), e.getCode(), e.getName(), e.getPassword(), e.getAdmin_flag(), e.getUpdated_at(), e.getDelete_flag());
+                dao.setUpdate(e);
+
+                //dao.setUpdate(e.getId(), e.getCode(), e.getName(), e.getPassword(), e.getAdmin_flag(), e.getUpdated_at(), e.getDelete_flag());
 
                 request.getSession().setAttribute("flush", "更新が完了しました。");
 

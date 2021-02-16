@@ -107,6 +107,45 @@ public class SelectDAO {
         return result;
     }
 
+    public Employee selectE_id(Integer id) {
+        Employee results = new Employee();
+
+        try {
+            Connection con = DBUtil.getConnection();
+
+            String sql = "select * from follow where employee_id = ?";
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+
+            if(rs.next()){
+            results.setFollow_id(rs.getInt("follow_id"));
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            DBUtil.close();
+        }
+        return results;
+    }
+
 
 
 }

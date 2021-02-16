@@ -32,9 +32,13 @@ public class ReportsShowServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SelectDAO dao = new SelectDAO();
         Report r = dao.selectReportCode(Integer.parseInt(request.getParameter("id")));
+        int a = Integer.parseInt(request.getParameter("a"));
 
+        request.setAttribute("a", a);
         request.setAttribute("report", r);
         request.setAttribute("_token", request.getSession().getId());
+        request.getSession().setAttribute("report_id", r.getId());
+        request.getSession().setAttribute("employee_id", r.getEmployee_id());
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");
         rd.forward(request, response);

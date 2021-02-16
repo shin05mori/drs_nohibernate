@@ -1,8 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
+    <c:if test="${errors != null}">
+    <div id="flush_error">
+        <c:forEach var="error" items="${errors}">
+            ・すでに<c:out value="${followed.name}" />さんを<c:out value="${error}" /><br />
+        </c:forEach>
+
+    </div>
+</c:if>
         <c:choose>
             <c:when test="${report != null}">
                 <h2>日報  詳細ページ</h2>
@@ -40,6 +49,21 @@
 
                 <c:if test="${sessionScope.login_employee.id == report.employee.id}">
                     <p><a href="<c:url value="/reports/edit?id=${report.id}" />">この日報を編集する</a></p>
+                </c:if>
+                <c:if test="${sessionScope.login_employee.id != report.employee.id}">
+                   <c:if test="${a != 1}">
+                    <p><a href="#" onclick="confirmFollow();"><c:out value="${report.employee.name}" />さんをフォローする</a></p>
+                    </c:if>
+                <form method="POST" action="<c:url value='/follow' />">
+                    <input type="hidden" name="_token" value="${_token}" />
+                </form>
+                <script>
+                    function confirmFollow() {
+                        if(confirm("フォローしてよろしいですか？")) {
+                            document.forms[0].submit();
+                        }
+                    }
+                 </script>
                 </c:if>
             </c:when>
             <c:otherwise>

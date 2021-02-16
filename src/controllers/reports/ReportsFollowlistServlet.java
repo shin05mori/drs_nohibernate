@@ -1,4 +1,4 @@
-package controllers.toppage;
+package controllers.reports;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,30 +12,31 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.CountDAO;
 import dao.PageDAO;
+import dao.SelectDAO;
 import models.Employee;
 import models.Report;
 
 /**
- * Servlet implementation class TopPageIndexServlet
+ * Servlet implementation class ReportsFollowlistServlet
  */
-@WebServlet("/index.html")
-public class TopPageIndexServlet extends HttpServlet {
+@WebServlet("/reports/rlist")
+public class ReportsFollowlistServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TopPageIndexServlet() {
+    public ReportsFollowlistServlet() {
         super();
     }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        SelectDAO dao = new SelectDAO();
+        Report r = dao.selectReportCode(Integer.parseInt(request.getParameter("id")));
+        Employee emp = dao.selectCode(Integer.parseInt(request.getParameter("id")));
 
         int page;
         try{
@@ -44,15 +45,17 @@ public class TopPageIndexServlet extends HttpServlet {
             page = 1;
         }
         CountDAO dao1 = new CountDAO();
-        Report list = dao1.getMyReportsCount(login_employee.getId());
-        int reports_count = (int)list.getCount();
+        Report count = dao1.getMyReportsCount(r.getId());
+        r.setCount(count.getCount());
+        long reports_count = (long)r.getCount();
 
         PageDAO dao2 = new PageDAO();
         int first = (15 * (page - 1));
         int last = 15;
 
-        List<Report> reports = dao2.selectMyAllReportPage(login_employee.getId(), first, last);
+        List<Report> reports = dao2.selectMyAllReportPage(r.getId(), first, last);
 
+        request.setAttribute("employee", emp);
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
@@ -62,7 +65,7 @@ public class TopPageIndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/topPage/index.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/rlist.jsp");
         rd.forward(request, response);
     }
 
